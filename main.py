@@ -2,6 +2,7 @@ import tcod
 
 from engine import Engine
 from entity import Entity
+from game_map import GameMap
 from input_handlers import EventHandler
 
 def main():
@@ -9,6 +10,9 @@ def main():
     screen_width = 80
     screen_height = 50
     
+    map_width = 80
+    map_height = 45
+
     # set tileset from image in same directory
     tileset = tcod.tileset.load_tilesheet(
         "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
@@ -24,8 +28,9 @@ def main():
     # set list of entities
     entities = {npc, player}
 
+    game_map = GameMap(map_width, map_height)
     # create new engine with entities, event handler, and player
-    engine = Engine(entities=entities, event_handler=event_handler, player=player)
+    engine = Engine(entities=entities, event_handler=event_handler, game_map=game_map, player=player)
 
     # create new terminal with title and vsync enabled.  This is the main window.  The context is the window manager.
     with tcod.context.new_terminal(
