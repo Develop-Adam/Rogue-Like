@@ -8,7 +8,7 @@ class Entity:
         self.y = y
         self.char = char
         self.color = color
-        
+
     # move entity by given amount
     def move(self, dx: int, dy: int) -> None:
         self.x += dx
