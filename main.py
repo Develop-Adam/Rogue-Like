@@ -1,15 +1,13 @@
 import tcod
+
 from actions import EscapeAction, MovementAction
+from entity import Entity
 from input_handlers import EventHandler
 
 def main():
     # set screen size
     screen_width = 80
     screen_height = 50
-
-    # set player position in middle of screen
-    player_x = int(screen_width / 2)
-    player_y = int(screen_height / 2)
     
     # set tileset from image in same directory
     tileset = tcod.tileset.load_tilesheet(
@@ -18,6 +16,13 @@ def main():
 
     # create new event handler
     event_handler = EventHandler()
+
+    # set player position, color, and character
+    player = Entity(int(screen_width / 2), int(screen_height / 2), "@", (255, 255, 255))
+    # set npc position, color, and character
+    npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), "@", (255, 255, 0))
+    # set list of entities
+    entities = {npc, player}
 
     # create new terminal with title and vsync enabled.  This is the main window.  The context is the window manager.
     with tcod.context.new_terminal(
@@ -33,7 +38,8 @@ def main():
 
         # main loop
         while True:
-            root_console.print(x=player_x, y=player_y, string="@")
+            # draw all entities in the list
+            root_console.print(x=player.x, y=player.y, string=player.char, fg=player.color)
             context.present(root_console)
 
             # clear the console before the next frame is drawn
@@ -51,8 +57,7 @@ def main():
 
                 # if action is an instance of MovementAction, update player position
                 if isinstance(action, MovementAction):
-                    player_x += action.dx
-                    player_y += action.dy
+                    player.move(dx=action.dx, dy=action.dy)
 
                 # if action is an instance of EscapeAction, exit the game
                 elif isinstance(action, EscapeAction):
