@@ -1,6 +1,5 @@
 import numpy as np  # type: ignore
 from tcod.console import Console
-
 import tile_types
 
 
@@ -8,9 +7,7 @@ class GameMap:
     # GameMap is a class that represents a map of the game world.  It is a 2D array of tiles.
     def __init__(self, width: int, height: int):
         self.width, self.height = width, height
-        self.tiles = np.full((width, height), fill_value=tile_types.floor, order="F")
-
-        self.tiles[30:33, 22] = tile_types.wall
+        self.tiles = np.full((width, height), fill_value=tile_types.wall, order="F")
 
     # in_bounds is a method that returns True if the given x and y coordinates are within the bounds of the map.
     def in_bounds(self, x: int, y: int) -> bool:
