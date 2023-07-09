@@ -1,6 +1,6 @@
 import tcod
 
-from actions import EscapeAction, MovementAction
+from engine import Engine
 from entity import Entity
 from input_handlers import EventHandler
 
@@ -24,6 +24,9 @@ def main():
     # set list of entities
     entities = {npc, player}
 
+    # create new engine with entities, event handler, and player
+    engine = Engine(entities=entities, event_handler=event_handler, player=player)
+
     # create new terminal with title and vsync enabled.  This is the main window.  The context is the window manager.
     with tcod.context.new_terminal(
         screen_width,
@@ -39,30 +42,13 @@ def main():
         # main loop
         while True:
             # draw all entities in the list
-            root_console.print(x=player.x, y=player.y, string=player.char, fg=player.color)
-            context.present(root_console)
+            engine.render(console=root_console, context=context)
+            events = tcod.event.wait()
 
             # clear the console before the next frame is drawn
-            root_console.clear()
+            engine.handle_events(events)
 
-            # wait for user input
-            for event in tcod.event.wait():
-                
-                # pass event to event handler
-                action = event_handler.dispatch(event)
-
-                # if event handler returns an action, execute it
-                if action is None:
-                    continue
-
-                # if action is an instance of MovementAction, update player position
-                if isinstance(action, MovementAction):
-                    player.move(dx=action.dx, dy=action.dy)
-
-                # if action is an instance of EscapeAction, exit the game
-                elif isinstance(action, EscapeAction):
-                    raise SystemExit()
-                
+                        
 
 if __name__ == "__main__":
     main()
